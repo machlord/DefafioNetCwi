@@ -7,9 +7,11 @@ namespace Desafio
     {
         static void Main()
         {
+            //Inicia o watcher que ficará observando a pasta
             string path = "C:\\Users\\machx\\Desktop\\in";
             FileSystemWatcher watcher = new Watcher(path);
 
+            
             Console.WriteLine("Pressione para Fechar");
             Console.ReadLine();
         }
