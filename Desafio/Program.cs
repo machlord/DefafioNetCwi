@@ -7,10 +7,10 @@ namespace Desafio
     {
         static void Main()
         {
-            FileSystemWatcher watch = new Watcher();
+            string path = "C:\\Users\\machx\\Desktop\\in";
+            FileSystemWatcher watcher = new Watcher(path);
 
-            Console.WriteLine("Precionar para Fechar");
-            Console.WriteLine();
+            Console.WriteLine("Pressione para Fechar");
             Console.ReadLine();
         }
 

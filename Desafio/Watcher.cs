@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 
 namespace Desafio
 {
     class Watcher : FileSystemWatcher
     {
-        public Watcher()
+        public Watcher(string path)
         {
-            this.Path = ConfigurationManager.AppSettings.Get("PathEntrada");
-
-            this.NotifyFilter = NotifyFilters.Attributes
+            Path = path;
+            NotifyFilter = NotifyFilters.Attributes
                                    | NotifyFilters.CreationTime
                                    | NotifyFilters.DirectoryName
                                    | NotifyFilters.FileName
@@ -22,27 +17,17 @@ namespace Desafio
                                    | NotifyFilters.Size;
 
 
-            this.Created += OnCreated;
-            this.Filter = "*.txt";
-            this.IncludeSubdirectories = true;
-            this.EnableRaisingEvents = true;
+            Created += OnCreated;
+            Filter = "*.txt";
+            IncludeSubdirectories = true;
+            EnableRaisingEvents = true;
         }
 
 
         private static void OnCreated(object sender, FileSystemEventArgs e)
         {
-            try
-            {
-                // Open the text file using a stream reader.
-                using var sr = new StreamReader($"{e.FullPath}");
-                // Read the stream as a string, and write the string to the console.
-                Console.WriteLine(sr.ReadToEnd());
-            }
-            catch (IOException ex)
-            {
-                Console.WriteLine("The file could not be read:");
-                Console.WriteLine(ex.Message);
-            }
+            var etl = new Etl();
+            etl.AnalisarArquivo($"{e.FullPath}");
         }
     }
 }
