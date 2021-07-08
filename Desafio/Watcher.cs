@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Text;
 
@@ -9,7 +10,7 @@ namespace Desafio
     {
         public Watcher()
         {
-            this.Path = @"C:\Users\machx\Desktop\in";
+            this.Path = ConfigurationManager.AppSettings.Get("PathEntrada");
 
             this.NotifyFilter = NotifyFilters.Attributes
                                    | NotifyFilters.CreationTime
