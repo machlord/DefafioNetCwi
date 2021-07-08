@@ -7,8 +7,6 @@ namespace Desafio
 {
     class Watcher : FileSystemWatcher
     {
-        private string _path_destino = @"C:\Users\machx\Desktop\in";
-
         public Watcher()
         {
             this.Path = @"C:\Users\machx\Desktop\in";
