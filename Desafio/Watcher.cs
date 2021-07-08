@@ -7,6 +7,8 @@ namespace Desafio
 {
     class Watcher : FileSystemWatcher
     {
+        private string _path_destino = @"C:\Users\machx\Desktop\in";
+
         public Watcher()
         {
             this.Path = @"C:\Users\machx\Desktop\in";
@@ -30,8 +32,18 @@ namespace Desafio
 
         private static void OnCreated(object sender, FileSystemEventArgs e)
         {
-            string value = $"Created: {e.FullPath}";
-            Console.WriteLine(value);
+            try
+            {
+                // Open the text file using a stream reader.
+                using var sr = new StreamReader($"{e.FullPath}");
+                // Read the stream as a string, and write the string to the console.
+                Console.WriteLine(sr.ReadToEnd());
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine("The file could not be read:");
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
