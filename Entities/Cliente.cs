@@ -4,12 +4,17 @@ using System.Text;
 
 namespace Entities
 {
-    class Cliente
+    public class Cliente
     {
         private int _id;
         private string _cnpj;
         private string _name;
         private string _businessArea;
+
+        public Cliente()
+        {
+            
+        }
 
         public Cliente(int id, string cnpj, string name, string businessArea)
         {

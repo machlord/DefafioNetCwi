@@ -4,13 +4,17 @@ using System.Text;
 
 namespace Entities
 {
-    class Vendedor
+    public class Vendedor
     {
         private int _id;
         private string _cpf;
         private string _name;
         private float _salary;
 
+        public Vendedor()
+        {
+            
+        }
         public Vendedor(int id, string cpf, string name, float salary)
         {
             _id = id;

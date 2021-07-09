@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Entities
 {
-    class Venda
+    public class Venda
     {
         private int _id;
         private int _saleId;
@@ -14,6 +14,10 @@ namespace Entities
         private string _salesmanName;
         private float _saleTotal;
 
+        public Venda()
+        {
+            
+        }
         public Venda(int id, int saleId, int itemId, int itemQuantity, float itemPrice, string salesmanName, float saleTotal)
         {
             _id = id;

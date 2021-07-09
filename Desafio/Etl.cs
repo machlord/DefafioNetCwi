@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using Entities;
 
 namespace Desafio
 {
@@ -15,6 +15,13 @@ namespace Desafio
                 using var sr = new StreamReader(path);
                 //Separar a linha pelo caractere 'ç'
                 IList<string> linha = sr.ReadToEnd().Split("ç");
+                //Preciso de :
+                //Lista de Clientes - R1: Quantidade de clientes;
+                var clientes = new CLiente();
+                //Lista de Vendedores - R2: Quantidade de vendedores;
+                //Lista de Vendas - R3: Id da venda mais cara
+                //Nome do Pior vendedor:
+
 
                 //Processando linha a linha
                 for (int i = 0; i < (linha.Count - 1); i+=3)

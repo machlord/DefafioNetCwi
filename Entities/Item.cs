@@ -4,11 +4,15 @@ using System.Text;
 
 namespace Entities
 {
-    class Item
+    public class Item
     {
         private int _id;
         private string _description;
 
+        public Item()
+        {
+            
+        }
         public Item(int id, string description)
         {
             _id = id;
