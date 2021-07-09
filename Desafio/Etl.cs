@@ -105,12 +105,12 @@ namespace Desafio
 
                 //Sumarisar em Um texto ;
                 Resultado resultado = new Resultado(    
-                                        listaCLientes.Count,
-                                        listaVendedores.Count,
-                                        compraMaisCara.SaleId,
-                                        piorVendedor.SalesmanName
-                );
-
+                                            listaCLientes.Count,
+                                            listaVendedores.Count,
+                                            compraMaisCara.SaleId,
+                                            piorVendedor.SalesmanName
+                                        );
+                _logger.LogInformation("{i}", ProcessarResultado(resultado));
                 //Criar Arquivo de Saida
                 //Remover Arquivo de Entrada
                 _logger.LogInformation("Processo Terminado");
@@ -122,9 +122,16 @@ namespace Desafio
             }
         }
 
-        public void ProcessarResultado(Resultado resultado)
+        public string ProcessarResultado(Resultado resultado)
         {
+            string analise = "Resultado:\n";
 
+            analise += $"Quantidade de Clientes: {resultado.NumeroClientes}\n";
+            analise += $"Quantidade de Vendedores: {resultado.NumeroVendedores}\n";
+            analise += $"ID da venda mais cara: {resultado.CompraMaisCara}\n";
+            analise += $"O pior Vendedor: {resultado.PiorVendedor}\n";
+
+            return analise;
         }
     }
 }
