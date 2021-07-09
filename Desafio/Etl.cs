@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using Entities;
 
 namespace Desafio
@@ -25,7 +26,7 @@ namespace Desafio
                 //Lista de Vendas - R3: Id da venda mais cara
                 IList<Venda> listaVendas = new List<Venda>();
                 //Nome do Pior vendedor:
-                string piorVendedor;
+                var piorVendedor = new { SalesmanName = "", total = 0f};
                 Console.WriteLine(linha.Count);
                 //Processando linha a linha
                 for (int i = 0; i < (linha.Count - 1); i+=4)
@@ -54,6 +55,7 @@ namespace Desafio
                             break;
                             //Adiciona a venda a lista de vendas
                         case "003":
+                            //Divide as informações do campo 3(informações do Item)
                             IList<string> itemInfo = linha[i + 2]
                                 .Replace("[", "")
                                 .Replace("]", "")
@@ -76,6 +78,22 @@ namespace Desafio
                     Console.WriteLine($"A: {linha[i]} - B: {linha[i + 1]} - C: {linha[i + 2]} - D: {linha[i + 3]}");
                 }
                 Console.WriteLine("Processo terminado");
+                Console.WriteLine($"Numero de clientes: {listaCLientes.Count}");
+                Console.WriteLine($"Numero de Vendedores: {listaVendedores.Count}");
+                //Pego com LINQ a venda mais cara;
+                Venda compraMaisCara = listaVendas.OrderBy(p => p.SaleTotal).First();
+                Console.WriteLine($"Numero de Vendedores: {compraMaisCara.SalesmanName} com o valor: {compraMaisCara.SaleTotal}");
+                piorVendedor = listaVendas
+                    .GroupBy(x => x.SalesmanName)
+                    .Select(lv => new 
+                    {
+                        SalesmanName = lv.First().SalesmanName,
+                        total = lv.Sum(s => s.SaleTotal)
+                    })
+                    .OrderBy(o => o.total)
+                    .Last();
+
+                Console.WriteLine($"Pior Vendedor: {piorVendedor.SalesmanName}");
             }
             catch (Exception ex)
             {
