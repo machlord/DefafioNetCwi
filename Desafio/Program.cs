@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Serilog;
+using System;
 using System.IO;
 
 namespace Desafio
@@ -7,13 +11,37 @@ namespace Desafio
     {
         static void Main()
         {
-            //Inicia o watcher que ficará observando a pasta
-            string path = "C:\\in";
-            FileSystemWatcher watcher = new Watcher(path);
+           
+            //Iniciando o Builder com vonfigurações do JSON
+            var builder = new ConfigurationBuilder();
+            BuildConfig(builder);
 
-            
-            Console.WriteLine("Pressione para Fechar");
-            Console.ReadLine();
+            //Iniciando o logger
+            Log.Logger = new LoggerConfiguration()
+                            .ReadFrom.Configuration(builder.Build())
+                            .Enrich.FromLogContext()
+                            .WriteTo.Console()
+                            .CreateLogger();
+            Log.Logger.Information("Aplicação iniciada");
+
+
+            var host = Host.CreateDefaultBuilder()
+                .ConfigureServices((context, services) =>
+                {
+                    services.AddTransient<IDesafio, Desafio>();
+                }).UseSerilog().Build();
+
+            var svc = ActivatorUtilities.CreateInstance<Desafio>(host.Services);
+            svc.Run();
+        }
+
+        static void BuildConfig(IConfigurationBuilder builder) 
+        {
+            builder.SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+                .AddEnvironmentVariables();
+
         }
 
     }
