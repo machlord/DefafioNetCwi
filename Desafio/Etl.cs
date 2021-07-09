@@ -13,9 +13,17 @@ namespace Desafio
             {
                 
                 using var sr = new StreamReader(path);
-                // Read the stream as a string, and write the string to the console.
-                Console.WriteLine(sr.ReadToEnd());
+                //Separar a linha pelo caractere 'ç'
+                IList<string> linha = sr.ReadToEnd().Split("ç");
+
+                //Processando linha a linha
+                for (int i = 0; i < (linha.Count - 1); i+=3)
+                {
+                    Console.WriteLine($" --> {i}");
+                    Console.WriteLine($"A: {linha[i]} - B: {linha[i + 1]} - C: {linha[i + 2]} - D: {linha[i + 3]}");
+                }
             }
+
             catch (IOException ex)
             {
                 Console.WriteLine("The file could not be read:");
