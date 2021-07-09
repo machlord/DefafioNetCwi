@@ -8,7 +8,7 @@ namespace Desafio
         static void Main()
         {
             //Inicia o watcher que ficará observando a pasta
-            string path = "C:\\Users\\machx\\Desktop\\in";
+            string path = "C:\\in";
             FileSystemWatcher watcher = new Watcher(path);
 
             
