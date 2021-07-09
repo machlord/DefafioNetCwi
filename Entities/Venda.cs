@@ -18,7 +18,7 @@ namespace Entities
         {
             
         }
-        public Venda(int id, int saleId, int itemId, int itemQuantity, float itemPrice, string salesmanName, float saleTotal)
+        public Venda(int id, int saleId, int itemId, int itemQuantity, float itemPrice, string salesmanName)
         {
             _id = id;
             _saleId = saleId;
@@ -26,7 +26,7 @@ namespace Entities
             _itemQuantity = itemQuantity;
             _itemPrice = itemPrice;
             _salesmanName = salesmanName;
-            _saleTotal = saleTotal;
+            _saleTotal = itemQuantity * itemPrice;
         }
 
         public int Id { get => _id; set => _id = value; }

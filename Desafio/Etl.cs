@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -33,15 +34,40 @@ namespace Desafio
                     {
                         case "001":
                             //Adiciona o Vendedor a lista de vendedores
-                            listaVendedores.Add(new Vendedor(i, linha[i + 1], linha[i + 2], float.Parse(linha[i + 3])));
+                            listaVendedores.Add(
+                                new Vendedor(
+                                    i, 
+                                    linha[i + 1], 
+                                    linha[i + 2], 
+                                    float.Parse(linha[i + 3])
+                                    ));
                             break;
                             //Adiciona o cliente a lista de clientes
                         case "002":
-                            listaCLientes.Add(new Cliente(i, linha[i + 1], linha[i + 2], linha[i +3]));
+                            listaCLientes.Add(
+                                new Cliente(
+                                    i, 
+                                    linha[i + 1], 
+                                    linha[i + 2], 
+                                    linha[i +3])
+                                );
                             break;
                             //Adiciona a venda a lista de vendas
                         case "003":
+                            IList<string> itemInfo = linha[i + 2]
+                                .Replace("[", "")
+                                .Replace("]", "")
+                                .Split("-");
 
+                            listaVendas.Add(
+                                new Venda(
+                                    i,
+                                    int.Parse(linha[i + 1]),
+                                    int.Parse(itemInfo[0]),
+                                    int.Parse(itemInfo[1]), 
+                                    float.Parse(itemInfo[2]), 
+                                    linha[i + 3]));
+                            
                             break;
                         default:
                             throw new Exception($"Arquivo: {linha[i]}");
