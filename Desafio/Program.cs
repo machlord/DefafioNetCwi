@@ -24,19 +24,22 @@ namespace Desafio
                             .CreateLogger();
             Log.Logger.Information("Aplicação iniciada");
 
-
+            //Inicia o serviço de injeção de Dependencias;
             var host = Host.CreateDefaultBuilder()
-                .ConfigureServices((context, services) =>
-                {
-                    services.AddTransient<IDesafio, Desafio>();
-                }).UseSerilog().Build();
+                           .ConfigureServices((context, services) =>
+                           {
+                               services.AddTransient<IDesafio, Desafio>();
+                                   
+                           }).UseSerilog().Build();
 
+            //Inicia o Aplicativo;
             var svc = ActivatorUtilities.CreateInstance<Desafio>(host.Services);
             svc.Run();
         }
 
         static void BuildConfig(IConfigurationBuilder builder) 
         {
+            //Configura o Appsettings e pega, se existir, o Appsettings de produção;
             builder.SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)

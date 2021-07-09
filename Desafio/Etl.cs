@@ -5,29 +5,42 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using Entidades;
+using Microsoft.Extensions.Logging;
 
 namespace Desafio
 {
     class Etl : IEtl
     {
+        private readonly ILogger _logger;
+
+        public Etl(ILogger logger)
+        {
+            _logger = logger;
+        }
+
+
         public void AnalisarArquivo(string path)
         {
             try
             {
-                
+                //Lê o arquivo;
                 using var sr = new StreamReader(path);
+                
                 //Separar a linha pelo caractere 'ç'
                 IList<string> linha = sr.ReadToEnd().Replace("\r", "").Split(new string[] { "ç", "\n" }, StringSplitOptions.None);
-                //Preciso de :
+                
                 //Lista de Clientes - R1: Quantidade de clientes;
                 IList<Cliente> listaCLientes = new List<Cliente>();
+                
                 //Lista de Vendedores - R2: Quantidade de vendedores;
                 IList<Vendedor> listaVendedores = new List<Vendedor>();
+                
                 //Lista de Vendas - R3: Id da venda mais cara
                 IList<Venda> listaVendas = new List<Venda>();
-                //Nome do Pior vendedor:
+                
+                //Dados do Pior vendedor:
                 var piorVendedor = new { SalesmanName = "", total = 0f};
-                Console.WriteLine(linha.Count);
+                
                 //Processando linha a linha
                 for (int i = 0; i < (linha.Count - 1); i+=4)
                 {
@@ -41,7 +54,7 @@ namespace Desafio
                                     linha[i + 1], 
                                     linha[i + 2], 
                                     float.Parse(linha[i + 3])
-                                    ));
+                                ));
                             break;
                             //Adiciona o cliente a lista de clientes
                         case "002":
@@ -68,19 +81,18 @@ namespace Desafio
                                     int.Parse(itemInfo[0]),
                                     int.Parse(itemInfo[1]), 
                                     float.Parse(itemInfo[2]), 
-                                    linha[i + 3]));
+                                    linha[i + 3])
+                                );
                             
                             break;
                         default:
                             throw new Exception($"Arquivo: {linha[i]}");
                     }
-                    Console.WriteLine($" --> {i}");
-                    Console.WriteLine($"A: {linha[i]} - B: {linha[i + 1]} - C: {linha[i + 2]} - D: {linha[i + 3]}");
+                    _logger.LogInformation($"Processando Item {((i + 1)/4 + 1)}", i);
                 }
                 Console.WriteLine("Processo terminado");
                 Console.WriteLine($"Numero de clientes: {listaCLientes.Count}");
                 Console.WriteLine($"Numero de Vendedores: {listaVendedores.Count}");
-                //Pego com LINQ a venda mais cara;
                 Venda compraMaisCara = listaVendas.OrderBy(p => p.SaleTotal).First();
                 Console.WriteLine($"Numero de Vendedores: {compraMaisCara.SalesmanName} com o valor: {compraMaisCara.SaleTotal}");
                 piorVendedor = listaVendas
@@ -94,6 +106,10 @@ namespace Desafio
                     .Last();
 
                 Console.WriteLine($"Pior Vendedor: {piorVendedor.SalesmanName}");
+                //Criar Arquivo de Saida
+                //Remover Arquivo de Entrada
+
+
             }
             catch (Exception ex)
             {

@@ -11,24 +11,25 @@ namespace Desafio
     {
         private readonly ILogger<Desafio> _log;
         private readonly IConfiguration _config;
+        private readonly Etl _etl;
 
         public Desafio(ILogger<Desafio> log, IConfiguration config)
         {
             _log = log;
             _config = config;
+            _etl = new Etl(_log);
         }
 
         public void Run()
         {
-            _log.LogInformation($"Variavel {_config.GetValue<string>("UrlEntrada")}");
+            //Informações
+            _log.LogInformation($"Local de Entrada {_config.GetValue<string>("UrlEntrada")}");
 
-            //Inicia o watcher que ficará observando a pasta
-            FileSystemWatcher watcher = new Watcher(_config.GetValue<string>("UrlEntrada"));
-
+            //Inicia o watcher que ficará observando a pasta;
+            FileSystemWatcher watcher = new Watcher(_config.GetValue<string>("UrlEntrada"), _log, _etl);
             
-            _log.LogInformation($"Pressione para Fechar");
+            //Mantem o console aberto;
             Console.ReadLine();
-
         }
     }
 }
