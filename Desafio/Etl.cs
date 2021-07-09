@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using Entidades;
@@ -25,7 +23,7 @@ namespace Desafio
             {
                 //Lê o arquivo;
                 using var sr = new StreamReader(path);
-                
+
                 //Separar a linha pelo caractere 'ç'
                 IList<string> linha = sr.ReadToEnd().Replace("\r", "").Split(new string[] { "ç", "\n" }, StringSplitOptions.None);
                 
@@ -41,7 +39,7 @@ namespace Desafio
                 //Dados do Pior vendedor:
                 var piorVendedor = new { SalesmanName = "", total = 0f};
                 
-                //Processando linha a linha
+                //Processando linha a linha, 4 informações por vez
                 for (int i = 0; i < (linha.Count - 1); i+=4)
                 {
                     switch (linha[i])
@@ -90,11 +88,11 @@ namespace Desafio
                     }
                     _logger.LogInformation($"Processando Item {((i + 1)/4 + 1)}", i);
                 }
-                Console.WriteLine("Processo terminado");
-                Console.WriteLine($"Numero de clientes: {listaCLientes.Count}");
-                Console.WriteLine($"Numero de Vendedores: {listaVendedores.Count}");
+               
+                //Analise da Compra mais cara
                 Venda compraMaisCara = listaVendas.OrderBy(p => p.SaleTotal).First();
-                Console.WriteLine($"Numero de Vendedores: {compraMaisCara.SalesmanName} com o valor: {compraMaisCara.SaleTotal}");
+               
+                //Analise do Pior Vendedor
                 piorVendedor = listaVendas
                     .GroupBy(x => x.SalesmanName)
                     .Select(lv => new 
@@ -105,17 +103,28 @@ namespace Desafio
                     .OrderBy(o => o.total)
                     .Last();
 
-                Console.WriteLine($"Pior Vendedor: {piorVendedor.SalesmanName}");
+                //Sumarisar em Um texto ;
+                Resultado resultado = new Resultado(    
+                                        listaCLientes.Count,
+                                        listaVendedores.Count,
+                                        compraMaisCara.SaleId,
+                                        piorVendedor.SalesmanName
+                );
+
                 //Criar Arquivo de Saida
                 //Remover Arquivo de Entrada
-
-
+                _logger.LogInformation("Processo Terminado");
             }
             catch (Exception ex)
             {
                 Console.WriteLine("The file could not be read:");
                 Console.WriteLine(ex.Message);
             }
+        }
+
+        public void ProcessarResultado(Resultado resultado)
+        {
+
         }
     }
 }
