@@ -7,7 +7,7 @@ namespace Desafio.Interfaces
     public interface IEtl
     {
         public void AnalisarArquivo(string path, string pathSaida);
-        public IList<string> DividirStream(StreamReader sr);
+        public IList<string> DividirStream(string sr);
         public Venda VendaMaisCara(IList<Venda> vendas);
         public Vendedor PiorVendedor(IList<Venda> vendas);
 

@@ -15,6 +15,11 @@ namespace Desafio
 
         public Etl() { }
 
+        public Etl(ILogger logger)
+        {
+            _logger = logger;
+        }
+
         public Etl(ILogger logger, IArquivo arquivo)
         {
             _logger = logger;
@@ -30,7 +35,7 @@ namespace Desafio
                 {
 
                     //Separar a linha pelo caractere 'ç'
-                    IList<string> linha = DividirStream(sr);
+                    IList<string> linha = DividirStream(sr.ReadToEnd());
 
                     //Lista de Clientes - R1: Quantidade de clientes;
                     IList<Cliente> clientes = new List<Cliente>();
@@ -43,6 +48,9 @@ namespace Desafio
 
                     //Processando linha a linha
                     ProcessarLinhas(linha, vendedores, clientes, vendas);
+
+                    //Avisando processamento
+                    _logger.LogInformation($"Itens Processados: {((linha.Count + 1) / 4 + 1)}");
 
                     //Analise da compra mais cara
                     var compraMaisCara = VendaMaisCara(vendas);
@@ -71,9 +79,9 @@ namespace Desafio
             }
         }
 
-        public IList<string> DividirStream(StreamReader sr)
+        public IList<string> DividirStream(string sr)
         {
-            return sr.ReadToEnd()
+            return sr
                      .Replace("\r", "")
                      .Split(new string[] { "ç", "\n" }, 
                         StringSplitOptions.None);
@@ -156,8 +164,7 @@ namespace Desafio
                     default:
                         throw new Exception($"Arquivo: {linha[i]}");
                 }
-
-                _logger.LogInformation($"Processando Item {((i + 1) / 4 + 1)}", i);
+                
             }
         }
 
