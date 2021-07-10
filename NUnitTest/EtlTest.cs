@@ -1,8 +1,8 @@
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace NUnitTest
 {
-    public class Tests
+    class EtlTest
     {
         [SetUp]
         public void Setup()

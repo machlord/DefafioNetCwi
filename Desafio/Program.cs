@@ -12,7 +12,7 @@ namespace Desafio
         static void Main()
         {
            
-            //Iniciando o Builder com vonfigurações do JSON
+            //Iniciando o Builder com configurações do JSON
             var builder = new ConfigurationBuilder();
             BuildConfig(builder);
 
@@ -24,7 +24,7 @@ namespace Desafio
                             .CreateLogger();
             Log.Logger.Information("Aplicação iniciada");
 
-            //Inicia o serviço de injeção de Dependencias;
+            //Inicia o serviço de injeção de Dependências;
             var host = Host.CreateDefaultBuilder()
                            .ConfigureServices((context, services) =>
                            {
