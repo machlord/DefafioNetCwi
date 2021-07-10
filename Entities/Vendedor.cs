@@ -28,7 +28,6 @@ namespace Entidades
             _name = name;
             _salary = salary;
         }
-
    
         public int Id { get => _id; set => _id = value; }
         public string Cpf { get => _cpf; set => _cpf = value; }

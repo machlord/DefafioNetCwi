@@ -1,6 +1,6 @@
-﻿namespace Desafio
+﻿namespace Desafio.Interfaces
 {
-    interface IDesafio
+    public interface IDesafio
     {
         void Run();
     }

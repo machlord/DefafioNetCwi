@@ -4,7 +4,7 @@ using Desafio.Interfaces;
 
 namespace Desafio
 {
-    class Arquivo : IArquivo
+    public class Arquivo : IArquivo
     {
         public void RemoverArquivo(string caminhoArquivo) 
         {

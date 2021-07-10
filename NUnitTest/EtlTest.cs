@@ -1,12 +1,16 @@
 ﻿using NUnit.Framework;
+using Desafio;
 
 namespace NUnitTest
 {
     class EtlTest
     {
+        private Etl _etl;
+
         [SetUp]
         public void Setup()
         {
+            _etl = new Etl();
         }
 
         [Test]

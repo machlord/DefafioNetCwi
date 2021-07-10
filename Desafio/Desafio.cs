@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Desafio.Interfaces;
 
 namespace Desafio
@@ -12,7 +10,7 @@ namespace Desafio
     {
         private readonly ILogger<Desafio> _log;
         private readonly IConfiguration _config;
-        private readonly Etl _etl;
+        private readonly IEtl _etl;
         private readonly Arquivo _arquivo;
 
         public Desafio(ILogger<Desafio> log, IConfiguration config)
@@ -26,12 +24,12 @@ namespace Desafio
         public void Run()
         {
             //Informações
-            _log.LogInformation($"Local de Entrada {_config.GetValue<string>("UrlEntrada")}");
+            _log.LogInformation($"Local de Entrada {Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "data", "in")}");
 
             //Inicia o watcher que ficará observando a pasta;
             FileSystemWatcher watcher = new Watcher(
-                    _config.GetValue<string>("UrlEntrada"),
-                    _config.GetValue<string>("UrlSaida"),
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "data", "in"),
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "data", "out"),
                     _log, 
                     _etl
                 );

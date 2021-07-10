@@ -1,11 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.IO;
+using Entidades;
 
-namespace Desafio
+namespace Desafio.Interfaces
 {
-    interface IEtl
+    public interface IEtl
     {
-        public void AnalisarArquivo(string path, string pathSaida) {}
+        public void AnalisarArquivo(string path, string pathSaida);
+        public IList<string> DividirStream(StreamReader sr);
+        public Venda VendaMaisCara(IList<Venda> vendas);
+        public Vendedor PiorVendedor(IList<Venda> vendas);
+
+        public void ProcessarLinhas(IList<string> linha, IList<Vendedor> vendedores, IList<Cliente> clientes,
+            IList<Venda> vendas);
+
+        public string ProcessarResultado(Resultado resultado);
     }
 }

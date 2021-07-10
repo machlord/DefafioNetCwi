@@ -8,17 +8,18 @@ using Microsoft.Extensions.Logging;
 
 namespace Desafio
 {
-    class Etl : IEtl
+    public class Etl : IEtl
     {
         private readonly ILogger _logger;
         private readonly IArquivo _arquivo;
+
+        public Etl() { }
 
         public Etl(ILogger logger, IArquivo arquivo)
         {
             _logger = logger;
             _arquivo = arquivo;
         }
-
 
         public void AnalisarArquivo(string path, string pathSaida)
         {
@@ -77,8 +78,6 @@ namespace Desafio
                      .Split(new string[] { "ç", "\n" }, 
                         StringSplitOptions.None);
         }
-
-        
 
         public Venda VendaMaisCara(IList<Venda> vendas)
         {
