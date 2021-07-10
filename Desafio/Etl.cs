@@ -29,8 +29,7 @@ namespace Desafio
                 {
 
                     //Separar a linha pelo caractere 'ç'
-                    IList<string> linha = sr.ReadToEnd().Replace("\r", "")
-                        .Split(new string[] {"ç", "\n"}, StringSplitOptions.None);
+                    IList<string> linha = DividirStream(sr);
 
                     //Lista de Clientes - R1: Quantidade de clientes;
                     IList<Cliente> clientes = new List<Cliente>();
@@ -41,66 +40,8 @@ namespace Desafio
                     //Lista de Vendas - R3: Id da venda mais cara
                     IList<Venda> vendas = new List<Venda>();
 
-                    //Processando linha a linha, 4 informações por vez
-                    for (var i = 0; i < (linha.Count - 1); i += 4)
-                    {
-                        switch (linha[i])
-                        {
-                            case "001":
-                                //Adiciona o Vendedor a lista de vendedores
-                                vendedores.Add(
-                                    new Vendedor(
-                                        i,
-                                        linha[i + 1],
-                                        linha[i + 2],
-                                        float.Parse(linha[i + 3])
-                                    ));
-                                break;
-                            //Adiciona o cliente a lista de clientes
-                            case "002":
-                                clientes.Add(
-                                    new Cliente(
-                                        i,
-                                        linha[i + 1],
-                                        linha[i + 2],
-                                        linha[i + 3])
-                                );
-                                break;
-                            //Adiciona a venda a lista de vendas
-                            case "003":
-                                //Cria a Classe de Vendas
-                                var venda = new Venda(i, int.Parse(linha[i + 1]), linha[i + 3]);
-                                
-                                //Divide as informações do campo 3(Lista de informações do Item)
-                                IList<string> itemInfo = linha[i + 2]
-                                    .Replace("[", "")
-                                    .Replace("]", "")
-                                    .Split(",");
-
-                                //Percorre a lista de itens
-                                foreach (var item in itemInfo)
-                                {
-                                    //Divide o item em partes
-                                    IList<string> itemAdd = item.Split("-");
-                                    //Adiciona o item a venda
-                                    venda.AddItemVenda(
-                                        new ItemVenda(
-                                            int.Parse(itemAdd[0]),
-                                            int.Parse(itemAdd[1]),
-                                            float.Parse(itemAdd[2])
-                                            )
-                                    );
-                                }
-                                //Finalmente adiciona a venda;
-                                vendas.Add(venda);
-
-                                break;
-                            default:
-                                throw new Exception($"Arquivo: {linha[i]}");
-                        }
-
-                        _logger.LogInformation($"Processando Item {((i + 1) / 4 + 1)}", i);
-                    }
+                    //Processando linha a linha
+                    ProcessarLinhas(linha, vendedores, clientes, vendas);
 
                     //Analise da compra mais cara
                     var compraMaisCara = VendaMaisCara(vendas);
@@ -108,20 +49,17 @@ namespace Desafio
                     //Analise do pior vendedor
                     var piorVendedor = PiorVendedor(vendas);
 
-                    //Sumarizar em texto ;
-                    var resultado = new Resultado(
+                    //Criar Arquivo de Saída
+                    _arquivo.CriarArquivoPeloTexto(ProcessarResultado(new Resultado(
                         clientes.Count,
                         vendedores.Count,
                         compraMaisCara.SaleId,
                         piorVendedor.Name
-                    );
+                    )), pathSaida);
 
-                    _logger.LogInformation("{i}", ProcessarResultado(resultado));
-                    //Criar Arquivo de Saída
-                    _arquivo.CriarArquivoPeloTexto(ProcessarResultado(resultado), pathSaida);
-                    //Remover Arquivo de Entrada
                 }
 
+                //Remover Arquivo de Entrada
                 _arquivo.RemoverArquivo(path);
                 _logger.LogInformation("Processo Terminado");
             }
@@ -132,17 +70,15 @@ namespace Desafio
             }
         }
 
-        public string ProcessarResultado(Resultado resultado)
+        public IList<string> DividirStream(StreamReader sr)
         {
-            string analise = "Resultado:\n";
-
-            analise += $"Quantidade de Clientes: {resultado.NumeroClientes}\n";
-            analise += $"Quantidade de Vendedores: {resultado.NumeroVendedores}\n";
-            analise += $"ID da venda mais cara: {resultado.CompraMaisCara}\n";
-            analise += $"O pior Vendedor: {resultado.PiorVendedor}\n";
-
-            return analise;
+            return sr.ReadToEnd()
+                     .Replace("\r", "")
+                     .Split(new string[] { "ç", "\n" }, 
+                        StringSplitOptions.None);
         }
+
+        
 
         public Venda VendaMaisCara(IList<Venda> vendas)
         {
@@ -161,6 +97,81 @@ namespace Desafio
                 .OrderByDescending(o => o.total)
                 .Last();
             return new Vendedor(piorVendedor.name);
+        }
+
+        public void ProcessarLinhas(IList<string> linha, IList<Vendedor> vendedores, IList<Cliente> clientes, IList<Venda> vendas)
+        {
+            for (var i = 0; i < (linha.Count - 1); i += 4)
+            {
+                switch (linha[i])
+                {
+                    case "001":
+                        //Adiciona o Vendedor a lista de vendedores
+                        vendedores.Add(
+                            new Vendedor(
+                                i,
+                                linha[i + 1],
+                                linha[i + 2],
+                                float.Parse(linha[i + 3])
+                            ));
+                        break;
+                    //Adiciona o cliente a lista de clientes
+                    case "002":
+                        clientes.Add(
+                            new Cliente(
+                                i,
+                                linha[i + 1],
+                                linha[i + 2],
+                                linha[i + 3])
+                        );
+                        break;
+                    //Adiciona a venda a lista de vendas
+                    case "003":
+                        //Cria a Classe de Vendas
+                        var venda = new Venda(i, int.Parse(linha[i + 1]), linha[i + 3]);
+
+                        //Divide as informações do campo 3(Lista de informações do Item)
+                        IList<string> itemInfo = linha[i + 2]
+                            .Replace("[", "")
+                            .Replace("]", "")
+                            .Split(",");
+
+                        //Percorre a lista de itens
+                        foreach (var item in itemInfo)
+                        {
+                            //Divide o item em partes
+                            IList<string> itemAdd = item.Split("-");
+                            //Adiciona o item a venda
+                            venda.AddItemVenda(
+                                new ItemVenda(
+                                    int.Parse(itemAdd[0]),
+                                    int.Parse(itemAdd[1]),
+                                    float.Parse(itemAdd[2])
+                                    )
+                            );
+                        }
+                        //Finalmente adiciona a venda;
+                        vendas.Add(venda);
+
+                        break;
+                    default:
+                        throw new Exception($"Arquivo: {linha[i]}");
+                }
+
+                _logger.LogInformation($"Processando Item {((i + 1) / 4 + 1)}", i);
+            }
+        }
+
+        public string ProcessarResultado(Resultado resultado)
+        {
+            string analise = "Resultado:\n";
+
+            analise += $"Quantidade de Clientes: {resultado.NumeroClientes}\n";
+            analise += $"Quantidade de Vendedores: {resultado.NumeroVendedores}\n";
+            analise += $"ID da venda mais cara: {resultado.CompraMaisCara}\n";
+            analise += $"O pior Vendedor: {resultado.PiorVendedor}\n";
+
+            return analise;
         }
     }
 }

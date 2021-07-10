@@ -10,7 +10,28 @@ namespace NUnitTest
         }
 
         [Test]
-        public void Test1()
+        public void DividirStream()
+        {
+            Assert.Pass();
+        }
+
+        [Test]
+        public void VendaMaisCara()
+        {
+            Assert.Pass();
+        }
+        [Test]
+        public void PiorVendedor()
+        {
+            Assert.Pass();
+        }
+        [Test]
+        public void ProcessarLinhas()
+        {
+            Assert.Pass();
+        }
+        [Test]
+        public void ProcessarResultado()
         {
             Assert.Pass();
         }
