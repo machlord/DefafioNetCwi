@@ -15,11 +15,6 @@ namespace Desafio
 
         public Etl() { }
 
-        public Etl(ILogger logger)
-        {
-            _logger = logger;
-        }
-
         public Etl(ILogger logger, IArquivo arquivo)
         {
             _logger = logger;
@@ -28,23 +23,22 @@ namespace Desafio
 
         public void AnalisarArquivo(string path, string pathSaida)
         {
-            try
+            //Lê o arquivo;
+            using (var sr = new StreamReader(path))
             {
-                //Lê o arquivo;
-                using (var sr = new StreamReader(path))
+                try
                 {
-
                     //Separar a linha pelo caractere 'ç'
-                    IList<string> linha = DividirStream(sr.ReadToEnd());
+                    var linha = DividirStream(sr.ReadToEnd());
 
                     //Lista de Clientes - R1: Quantidade de clientes;
-                    IList<Cliente> clientes = new List<Cliente>();
+                    var clientes = new List<Cliente>();
 
                     //Lista de Vendedores - R2: Quantidade de vendedores;
-                    IList<Vendedor> vendedores = new List<Vendedor>();
+                    var vendedores = new List<Vendedor>();
 
                     //Lista de Vendas - R3: Id da venda mais cara
-                    IList<Venda> vendas = new List<Venda>();
+                    var vendas = new List<Venda>();
 
                     //Processando linha a linha
                     ProcessarLinhas(linha, vendedores, clientes, vendas);
@@ -67,17 +61,18 @@ namespace Desafio
                     )), pathSaida);
 
                 }
+                catch (Exception ex)
+                {
+                    sr.Close();
+                    _logger.LogWarning("O arquivo não conseguiu ser importado por conter erros");
+                }
+            }
 
-                //Remover Arquivo de Entrada
-                _arquivo.RemoverArquivo(path);
-                _logger.LogInformation("Processo Terminado");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("The file could not be read:");
-                Console.WriteLine(ex.Message);
-            }
+            //Remover Arquivo de Entrada
+            _arquivo.RemoverArquivo(path);
+            _logger.LogInformation("Processo Terminado");
         }
+
 
         public IList<string> DividirStream(string sr)
         {

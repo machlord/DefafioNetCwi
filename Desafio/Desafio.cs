@@ -9,14 +9,12 @@ namespace Desafio
     class Desafio : IDesafio
     {
         private readonly ILogger<Desafio> _log;
-        private readonly IConfiguration _config;
         private readonly IEtl _etl;
         private readonly Arquivo _arquivo;
 
-        public Desafio(ILogger<Desafio> log, IConfiguration config)
+        public Desafio(ILogger<Desafio> log)
         {
             _log = log;
-            _config = config;
             _arquivo = new Arquivo();
             _etl = new Etl(_log, _arquivo);
         }

@@ -34,8 +34,8 @@ namespace Desafio
                            }).UseSerilog().Build();
 
             //Inicia o Aplicativo;
-            var svc = ActivatorUtilities.CreateInstance<Desafio>(host.Services);
-            svc.Run();
+            var desafio = ActivatorUtilities.CreateInstance<Desafio>(host.Services);
+            desafio.Run();
         }
 
         static void BuildConfig(IConfigurationBuilder builder) 

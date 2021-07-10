@@ -27,14 +27,8 @@ namespace Desafio
         {
             try
             {
-                // Cria o FileInfo
-                System.IO.FileInfo fi = new System.IO.FileInfo(caminhoArquivo);
-                // Se o arquivo existir
-                if (fi.Exists)
-                {
-                    // Renomear movendo ele
-                    fi.MoveTo(@"C:\Temp\Mahesh.jpg");
-                }
+                // Renomear movendo ele
+                File.Move(caminhoArquivo, Path.Combine(caminhoArquivo, "_ERRO")); // Rename the oldFileName into newFileName
             }
             catch (IOException ioExp)
             {
