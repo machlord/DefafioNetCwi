@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desafio", "Desafio\Desafio.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entidades", "Entities\Entidades.csproj", "{EB0E7A4C-177A-49F2-9E82-5AF5A379103E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnitTest", "NUnitTest\NUnitTest.csproj", "{CFDBAF09-8298-4147-9275-413F2BB5B29A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{EB0E7A4C-177A-49F2-9E82-5AF5A379103E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB0E7A4C-177A-49F2-9E82-5AF5A379103E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB0E7A4C-177A-49F2-9E82-5AF5A379103E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFDBAF09-8298-4147-9275-413F2BB5B29A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFDBAF09-8298-4147-9275-413F2BB5B29A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFDBAF09-8298-4147-9275-413F2BB5B29A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFDBAF09-8298-4147-9275-413F2BB5B29A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
