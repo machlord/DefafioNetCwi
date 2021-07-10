@@ -6,6 +6,6 @@ namespace Desafio
 {
     interface IEtl
     {
-        public void AnalisarArquivo(string path) {}
+        public void AnalisarArquivo(string path, string pathSaida) {}
     }
 }

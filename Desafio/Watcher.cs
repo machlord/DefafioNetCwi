@@ -8,14 +8,16 @@ namespace Desafio
         private readonly ILogger<Desafio> _logger;
         private readonly IEtl _etl;
 
-        public Watcher(string path, ILogger<Desafio> logger, IEtl etl)
+
+        public Watcher(string pathEntrada, string pathSaida,ILogger<Desafio> logger, IEtl etl)
         {
             _logger = logger;
             _etl = etl;
 
             try
             {
-                Path = path;
+                Path = pathEntrada;
+
                 NotifyFilter = NotifyFilters.Attributes
                                        | NotifyFilters.CreationTime
                                        | NotifyFilters.DirectoryName
@@ -27,7 +29,7 @@ namespace Desafio
 
 
                 //Adiciona o metodo que será executado quando criado;
-                Created += (sender, e) => OnCreated(sender, e, _logger, _etl);
+                Created += (sender, e) => OnCreated(e, _etl, pathSaida);
                 
                 Filter = "*.txt";
                 IncludeSubdirectories = true;
@@ -40,9 +42,9 @@ namespace Desafio
             
         }
 
-        private static void OnCreated(object sender, FileSystemEventArgs e, ILogger logger, IEtl etl)
+        private static void OnCreated(FileSystemEventArgs e, IEtl etl, string pathSaida)
         {
-            etl.AnalisarArquivo($"{e.FullPath}");
+            etl.AnalisarArquivo($"{e.FullPath}", pathSaida);
         }
     }
 }

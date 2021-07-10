@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using Desafio.Interfaces;
 
 namespace Desafio
 {
-    class Arquivo
+    class Arquivo : IArquivo
     {
         public void RemoverArquivo(string caminhoArquivo) 
         {
@@ -33,13 +32,13 @@ namespace Desafio
                 // Se o arquivo existir
                 if (fi.Exists)
                 {
-                    // Renomei movendo ele
+                    // Renomear movendo ele
                     fi.MoveTo(@"C:\Temp\Mahesh.jpg");
                 }
             }
             catch (IOException ioExp)
             {
-
+                Console.WriteLine($"Erro: {ioExp.Message}");
             }
         }
         
@@ -47,28 +46,17 @@ namespace Desafio
         {
             try
             {
-                if (!File.Exists(local))
-                {
-                    // Cria o arquivo
-                    using (StreamWriter sw = File.CreateText(local))
-                    {
-                        sw.WriteLine(texto);
-                    }
-                }
+                var caminhoComExtensao = $"{local}\\resultado.txt";
+                if (File.Exists(local)) return;
+                
+                // Cria o arquivo
+                using var sw = File.CreateText(caminhoComExtensao);
+                sw.WriteLine(texto);
 
-                // Abre o Arquivo se ele existir
-                using (StreamReader sr = File.OpenText(local))
-                {
-                    string s = "";
-                    while ((s = sr.ReadLine()) != null)
-                    {
-                        Console.WriteLine(s);
-                    }
-                }
             }
             catch (System.ArgumentException ex)
             {
-
+                Console.WriteLine($"Erro: {ex.Message}");
             }
            
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Desafio.Interfaces;
 using Entidades;
 using Microsoft.Extensions.Logging;
 
@@ -10,14 +11,16 @@ namespace Desafio
     class Etl : IEtl
     {
         private readonly ILogger _logger;
+        private readonly IArquivo _arquivo;
 
-        public Etl(ILogger logger)
+        public Etl(ILogger logger, IArquivo arquivo)
         {
             _logger = logger;
+            _arquivo = arquivo;
         }
 
 
-        public void AnalisarArquivo(string path)
+        public void AnalisarArquivo(string path, string pathSaida)
         {
             try
             {
@@ -28,25 +31,22 @@ namespace Desafio
                 IList<string> linha = sr.ReadToEnd().Replace("\r", "").Split(new string[] { "ç", "\n" }, StringSplitOptions.None);
                 
                 //Lista de Clientes - R1: Quantidade de clientes;
-                IList<Cliente> listaCLientes = new List<Cliente>();
+                IList<Cliente> clientes = new List<Cliente>();
                 
                 //Lista de Vendedores - R2: Quantidade de vendedores;
-                IList<Vendedor> listaVendedores = new List<Vendedor>();
+                IList<Vendedor> vendedores = new List<Vendedor>();
                 
                 //Lista de Vendas - R3: Id da venda mais cara
-                IList<Venda> listaVendas = new List<Venda>();
-                
-                //Dados do Pior vendedor:
-                var piorVendedor = new { SalesmanName = "", total = 0f};
+                IList<Venda> vendas = new List<Venda>();
                 
                 //Processando linha a linha, 4 informações por vez
-                for (int i = 0; i < (linha.Count - 1); i+=4)
+                for (var i = 0; i < (linha.Count - 1); i+=4)
                 {
                     switch (linha[i])
                     {
                         case "001":
                             //Adiciona o Vendedor a lista de vendedores
-                            listaVendedores.Add(
+                            vendedores.Add(
                                 new Vendedor(
                                     i, 
                                     linha[i + 1], 
@@ -56,7 +56,7 @@ namespace Desafio
                             break;
                             //Adiciona o cliente a lista de clientes
                         case "002":
-                            listaCLientes.Add(
+                            clientes.Add(
                                 new Cliente(
                                     i, 
                                     linha[i + 1], 
@@ -72,7 +72,7 @@ namespace Desafio
                                 .Replace("]", "")
                                 .Split("-");
 
-                            listaVendas.Add(
+                            vendas.Add(
                                 new Venda(
                                     i,
                                     int.Parse(linha[i + 1]),
@@ -90,10 +90,10 @@ namespace Desafio
                 }
                
                 //Analise da Compra mais cara
-                Venda compraMaisCara = listaVendas.OrderBy(p => p.SaleTotal).First();
+                Venda compraMaisCara = vendas.OrderBy(p => p.SaleTotal).First();
                
                 //Analise do Pior Vendedor
-                piorVendedor = listaVendas
+                var piorVendedor = vendas
                     .GroupBy(x => x.SalesmanName)
                     .Select(lv => new 
                     {
@@ -103,16 +103,21 @@ namespace Desafio
                     .OrderBy(o => o.total)
                     .Last();
 
-                //Sumarisar em Um texto ;
-                Resultado resultado = new Resultado(    
-                                            listaCLientes.Count,
-                                            listaVendedores.Count,
-                                            compraMaisCara.SaleId,
-                                            piorVendedor.SalesmanName
-                                        );
+                //Sumarizar em Um texto ;
+                var resultado = new Resultado(    
+                                    clientes.Count,
+                                    vendedores.Count,
+                                    compraMaisCara.SaleId,
+                                    piorVendedor.SalesmanName
+                                );
+                //Fecha o arquivo sendo lido
+                sr.Dispose();
+
                 _logger.LogInformation("{i}", ProcessarResultado(resultado));
-                //Criar Arquivo de Saida
+                //Criar Arquivo de Saída
+                _arquivo.CriarArquivoPeloTexto(ProcessarResultado(resultado), pathSaida);
                 //Remover Arquivo de Entrada
+                _arquivo.RemoverArquivo(path);
                 _logger.LogInformation("Processo Terminado");
             }
             catch (Exception ex)
