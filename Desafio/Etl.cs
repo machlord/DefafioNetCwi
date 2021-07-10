@@ -68,26 +68,31 @@ namespace Desafio
                                 break;
                             //Adiciona a venda a lista de vendas
                             case "003":
-                                //Divide as informações do campo 3(informações do Item)
+                                //Cria a Classe de Vendas
+                                var venda = new Venda(i, int.Parse(linha[i + 1]), linha[i + 3]);
+                                
+                                //Divide as informações do campo 3(Lista de informações do Item)
                                 IList<string> itemInfo = linha[i + 2]
                                     .Replace("[", "")
                                     .Replace("]", "")
                                     .Split(",");
+
+                                //Percorre a lista de itens
                                 foreach (var item in itemInfo)
                                 {
+                                    //Divide o item em partes
                                     IList<string> itemAdd = item.Split("-");
-                                    vendas.Add(
-                                        new Venda(
-                                            i,
-                                            int.Parse(linha[i + 1]),
+                                    //Adiciona o item a venda
+                                    venda.AddItemVenda(
+                                        new ItemVenda(
                                             int.Parse(itemAdd[0]),
                                             int.Parse(itemAdd[1]),
-                                            float.Parse(itemAdd[2]),
-                                            linha[i + 3])
+                                            float.Parse(itemAdd[2])
+                                            )
                                     );
-
                                 }
-
+                                //Finalmente adiciona a venda;
+                                vendas.Add(venda);
 
                                 break;
                             default:
@@ -97,28 +102,19 @@ namespace Desafio
                         _logger.LogInformation($"Processando Item {((i + 1) / 4 + 1)}", i);
                     }
 
-                    //Analise da Compra mais cara
-                    Venda compraMaisCara = vendas.OrderBy(p => p.SaleTotal).First();
+                    //Analise da compra mais cara
+                    var compraMaisCara = VendaMaisCara(vendas);
 
-                    //Analise do Pior Vendedor
-                    var piorVendedor = vendas
-                        .GroupBy(x => x.SalesmanName)
-                        .Select(lv => new
-                        {
-                            SalesmanName = lv.First().SalesmanName,
-                            total = lv.Sum(s => s.SaleTotal)
-                        })
-                        .OrderBy(o => o.total)
-                        .Last();
+                    //Analise do pior vendedor
+                    var piorVendedor = PiorVendedor(vendas);
 
-                    //Sumarizar em Um texto ;
+                    //Sumarizar em texto ;
                     var resultado = new Resultado(
                         clientes.Count,
                         vendedores.Count,
                         compraMaisCara.SaleId,
-                        piorVendedor.SalesmanName
+                        piorVendedor.Name
                     );
-
 
                     _logger.LogInformation("{i}", ProcessarResultado(resultado));
                     //Criar Arquivo de Saída
@@ -146,6 +142,25 @@ namespace Desafio
             analise += $"O pior Vendedor: {resultado.PiorVendedor}\n";
 
             return analise;
+        }
+
+        public Venda VendaMaisCara(IList<Venda> vendas)
+        {
+            return vendas.OrderByDescending(p => p.SaleTotal).First();
+        }
+
+        public Vendedor PiorVendedor(IList<Venda> vendas)
+        {
+            var piorVendedor=  vendas
+                .GroupBy(x => x.SalesmanName)
+                .Select(lv => new
+                {
+                    name = lv.First().SalesmanName,
+                    total = lv.Sum(s => s.SaleTotal)
+                })
+                .OrderByDescending(o => o.total)
+                .Last();
+            return new Vendedor(piorVendedor.name);
         }
     }
 }

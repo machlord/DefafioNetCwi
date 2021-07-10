@@ -10,7 +10,7 @@ namespace Entidades
         private int _saleId;
         private string _salesmanName;
         private float _saleTotal;
-        private IList<ItemVenda> _vendas;
+        private IList<ItemVenda> _itensVenda = new List<ItemVenda>();
 
         public Venda()
         {
@@ -32,12 +32,17 @@ namespace Entidades
 
         public void AddItemVenda(ItemVenda itemVenda)
         {
-            _vendas.Add(itemVenda);
+            _itensVenda.Add(itemVenda);
+            AddValorVenda(itemVenda.ItemPrice * itemVenda.ItemQtd);
         }
 
         public int Id { get => _id; set => _id = value; }
         public int SaleId { get => _saleId; set => _saleId = value; }
         public string SalesmanName { get => _salesmanName; set => _salesmanName = value; }
         public float SaleTotal { get => _saleTotal; set => _saleTotal = value; }
+        public IList<ItemVenda> ItensVenda
+        {
+            get => _itensVenda;
+        }
     }
 }

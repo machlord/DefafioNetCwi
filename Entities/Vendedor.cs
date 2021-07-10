@@ -15,6 +15,12 @@ namespace Entidades
         {
             
         }
+        
+        public Vendedor(string name)
+        {
+            _name = name;
+        }
+
         public Vendedor(int id, string cpf, string name, float salary)
         {
             _id = id;
@@ -23,6 +29,7 @@ namespace Entidades
             _salary = salary;
         }
 
+   
         public int Id { get => _id; set => _id = value; }
         public string Cpf { get => _cpf; set => _cpf = value; }
         public string Name { get => _name; set => _name = value; }
